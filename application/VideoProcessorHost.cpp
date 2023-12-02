@@ -10,7 +10,7 @@ VideoProcessorHost::~VideoProcessorHost()
 
 void VideoProcessorHost::printRegisteredPlugins()
 {
-    printf("Plugins (%d):\n", mPlugins.size());
+    printf("Plugins (%ld):\n", mPlugins.size());
     for (auto& p : mPlugins) {
         printf("%s\n", p->GetName());
     }

@@ -2,8 +2,13 @@
 #include <cstdint>
 #include "InterfaceIds.h"
 
+#ifdef WIN32
 #define MYCALLTYPE __stdcall
 #define EXPORT_DLL __declspec(dllexport)
+#else
+#define MYCALLTYPE
+#define EXPORT_DLL __attribute__ ((visibility ("default")))
+#endif
 
 typedef uint8_t MYRESULT;
 

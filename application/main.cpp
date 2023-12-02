@@ -1,5 +1,9 @@
 #include <iostream>
+#ifdef WIN32
 #include <Windows.h>
+#else
+#include <dlfcn.h>
+#endif
 #include "VideoFrameComponent.h"
 #include "VideoProcessorHost.h"
 #include "c_api.h"
@@ -73,8 +77,12 @@ void processVideo(PluginPassHostType pluginMethod, int frameTypeId) {
         printf("Failed to init processor\n");
         return;
     }
-    VideoFrameComponent frameComponent(10, 10);
-    processor->Process(&frameComponent);
+    VideoFrameComponent frameCom(10, 10);
+    MyUnknown* frameAbstr = nullptr;
+    frameCom.QueryInterface(MyUnknown::ID, reinterpret_cast<void**>(&frameAbstr));
+    if (processor->Process(frameAbstr) != UknownNS::MYSUCCESS) {
+        printf("Failed to process frame\n");
+    }
 }
 
 int main(int argc, const char** argv)
@@ -105,7 +113,7 @@ int main(int argc, const char** argv)
 #ifdef WIN32
     pluginMethod = reinterpret_cast<PluginPassHostType>(GetProcAddress(lib, PluginPassHostName));
 #else
-    pluginMethod = reinterpret_cast<PluginPassHostType>dlsym(lib, PluginPassHostName);
+    pluginMethod = reinterpret_cast<PluginPassHostType>(dlsym(lib, PluginPassHostName));
 #endif // WIN32
 
     if (!pluginMethod) {
@@ -113,6 +121,12 @@ int main(int argc, const char** argv)
         return 1;
     }
     processVideo(pluginMethod, frameTypeId);
+
+#ifdef WIN32
     FreeLibrary(lib);
+#else
+    dlclose(lib);
+#endif // WIN32
+
     return 0;
-    }
+}

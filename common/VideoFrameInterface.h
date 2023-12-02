@@ -2,7 +2,7 @@
 
 #include "com.h"
 
-class VideoFrame : public virtual MyUnknown {
+class VideoFrame : public MyUnknown {
 public:
     static constexpr MYID ID = InterfaceIds::VIDEOFRAME_ID;
 
@@ -12,7 +12,7 @@ public:
     virtual float MYCALLTYPE GetOpacity() = 0;
 };
 
-class VideoFrame2 : public virtual MyUnknown {
+class VideoFrame2 : public MyUnknown {
 public:
     static constexpr MYID ID = InterfaceIds::VIDEOFRAME2_ID;
 
@@ -22,7 +22,7 @@ public:
     virtual uint32_t MYCALLTYPE GetLinesize() = 0;
 };
 
-class OGLFrame : public virtual MyUnknown {
+class OGLFrame : public MyUnknown {
 public:
     static constexpr MYID ID = InterfaceIds::OGLFRAME;
 

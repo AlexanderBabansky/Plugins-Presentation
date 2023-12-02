@@ -135,7 +135,7 @@ MYRESULT VideoProcessor::ProcessFrameOGL(MyUnknown* frame_unk)
         printf("Wrong frame passed\n");
         return UknownNS::MYERROR;
     }
-    printf("Processing OGL frame.\id: %d\n\n", frame->GetOGLId());
+    printf("Processing OGL frame. id: %d\n\n", frame->GetOGLId());
     frame->Release();
     return UknownNS::MYSUCCESS;
 }
