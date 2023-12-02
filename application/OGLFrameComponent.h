@@ -1,3 +1,5 @@
+#pragma once
+
 #include "VideoFrameInterface.h"
 
 class OGLFrameComponent : public virtual OGLFrame {

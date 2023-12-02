@@ -1,10 +1,10 @@
 #include <iostream>
-#include "MyTestComponent.h"
 #include <Windows.h>
 #include "VideoFrameComponent.h"
 #include "VideoProcessorHost.h"
 #include "c_api.h"
 
+#ifdef WIN32
 void printWinLastError() {
     auto errorMessageID = GetLastError();
     LPSTR messageBuffer = nullptr;
@@ -13,6 +13,7 @@ void printWinLastError() {
     printf("%s\n", messageBuffer);
     LocalFree(messageBuffer);
 }
+#endif
 
 std::vector<MYID> getProcessorSupportedFrames(VideoProcessorInterface* processor) {
     std::vector<MYID> check = { VideoFrame::ID, VideoFrame2::ID, OGLFrame::ID };
@@ -48,7 +49,7 @@ void printSupportedFrames(const std::vector<MYID>& types) {
     printf("\n");
 }
 
-void processVideo(PluginPassHostType pluginMethod) {
+void processVideo(PluginPassHostType pluginMethod, int frameTypeId) {
     VideoProcessorHost host;
     pluginMethod(&host);
     printf("\n");
@@ -64,7 +65,11 @@ void processVideo(PluginPassHostType pluginMethod) {
         return;
     }
     printSupportedFrames(supportedFrames);
-    if (processor->Init(supportedFrames[1]) != UknownNS::MYSUCCESS) {
+    if (supportedFrames.size() <= frameTypeId) {
+        printf("Out of supported frame\n");
+        return;
+    }
+    if (processor->Init(supportedFrames[frameTypeId]) != UknownNS::MYSUCCESS) {
         printf("Failed to init processor\n");
         return;
     }
@@ -72,9 +77,14 @@ void processVideo(PluginPassHostType pluginMethod) {
     processor->Process(&frameComponent);
 }
 
-int main()
+int main(int argc, const char** argv)
 {
-    const char* lib_path = "C:\\Babansky\\PluginsPres\\PluginsCmake\\out\\build\\x64-Debug\\plugin\\plugin.dll";
+    if (argc < 3) {
+        printf("Bad args\n");
+        return 1;
+    }
+    const char* lib_path = argv[1];
+    int frameTypeId = atoi(argv[2]);
     PluginPassHostType pluginMethod = nullptr;
 
 #ifdef WIN32
@@ -85,7 +95,9 @@ int main()
     lib = dlopen(lib_path, RTLD_NOW);
 #endif
     if (!lib) {
+#ifdef WIN32
         printWinLastError();
+#endif // WIN32        
         printf("failed to load plugin\n");
         return 1;
     }
@@ -100,7 +112,7 @@ int main()
         printf("failed to load method\n");
         return 1;
     }
-    processVideo(pluginMethod);
+    processVideo(pluginMethod, frameTypeId);
     FreeLibrary(lib);
     return 0;
-}
+    }

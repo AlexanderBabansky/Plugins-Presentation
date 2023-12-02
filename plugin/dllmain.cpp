@@ -1,4 +1,3 @@
-#include "MyTestInterface.h"
 #include "VideoProcessor.h"
 #include <cstdio>
 #include "c_api.h"

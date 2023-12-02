@@ -1,5 +1,6 @@
-#include "VideoFrameInterface.h"
+#pragma once
 
+#include "VideoFrameInterface.h"
 
 class VideoFrameComponent : public virtual VideoFrame, public virtual VideoFrame2 {
 public:
