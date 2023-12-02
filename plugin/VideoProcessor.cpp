@@ -98,6 +98,10 @@ MYRESULT MYCALLTYPE VideoProcessor::QueryInterface(MYID riid, void** ppvObject)
         (*ppvObject) = static_cast<VideoProcessorInterface*>(this);
         AddRef();
         return UknownNS::MYSUCCESS;
+    case MyUnknown::ID:
+        (*ppvObject) = static_cast<MyUnknown*>(this);
+        AddRef();
+        return UknownNS::MYSUCCESS;
     default:
         break;
     }

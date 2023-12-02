@@ -65,6 +65,7 @@ MYRESULT MYCALLTYPE VideoFrameComponent::QueryInterface(MYID riid, void** ppvObj
         return UknownNS::MYSUCCESS;
     case MyUnknown::ID:
         (*ppvObject) = static_cast<MyUnknown*>(&mFrame1Comp);
+        AddRef();
         return UknownNS::MYSUCCESS;
     default:
         break;
